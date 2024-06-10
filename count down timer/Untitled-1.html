@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .time-input {
+            margin-bottom: 20px;
+        }
+
+        input[type="date"],
+        input[type="time"] {
+            margin: 0 10px;
+            padding: 5px;
+            font-size: 1rem;
+        }
+
+        button {
+            padding: 5px 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .countdown {
+            font-size: 2rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Countdown Timer</h1>
+        <div class="time-input">
+            <label for="date">Date:</label>
+            <input type="date" id="date">
+            <label for="time">Time:</label>
+            <input type="time" id="time">
+            <button id="startButton">Start Countdown</button>
+        </div>
+        <div class="countdown">
+            <h2 id="countdownDisplay">00:00:00</h2>
+        </div>
+    </div>
+    <script>
+        document.getElementById('startButton').addEventListener('click', function() {
+            const dateInput = document.getElementById('date').value;
+            const timeInput = document.getElementById('time').value;
+
+            if (!dateInput || !timeInput) {
+                alert('Please select both date and time.');
+                return;
+            }
+
+            const targetDateTime = new Date(`${dateInput}T${timeInput}`);
+            startCountdown(targetDateTime);
+        });
+
+        function startCountdown(targetDateTime) {
+            const countdownDisplay = document.getElementById('countdownDisplay');
+
+            function updateCountdown() {
+                const now = new Date();
+                const timeRemaining = targetDateTime - now;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(interval);
+                    countdownDisplay.textContent = '00:00:00';
+                    alert('Countdown finished!');
+                    return;
+                }
+
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                countdownDisplay.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+            }
+
+            function pad(number) {
+                return number < 10 ? '0' + number : number;
+            }
+
+            updateCountdown();
+            const interval = setInterval(updateCountdown, 1000);
+        }
+    </script>
+</body>
+</html>
